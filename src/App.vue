@@ -1,6 +1,6 @@
 <template>
   <div class="contenedor">
-    <MiCabecera titulo="VisualTech" />
+    <MiCabecera titulo="ClienTech" />
     <RouterView />
   </div>
 </template>

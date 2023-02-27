@@ -21,12 +21,15 @@
           </h1>
           <h1 class="mt-3">Sala: {{ valor.sala }}</h1>
           <div class="grid grid-cols-2 mt-4">
-            <h1 class="pl-36">{{ valor.temperatura }}ºC</h1>
+            <h1 class="pl-5">{{ valor.temperatura }}ºC</h1>
 
             <div>
               <form @submit.prevent="actualizaTemperatura()">
                 <input v-model="valorTemperatura" type="number" class="w-6/12 text-black" />
-                <button type="submit" class="rounded-md bg-stone-600 ml-3 hover:bg-stone-700">
+                <button
+                  type="submit"
+                  class="mr-3 mt-1 rounded-md bg-stone-600 ml-3 hover:bg-stone-700"
+                >
                   Cambiar
                 </button>
               </form>
@@ -36,7 +39,23 @@
       </div>
       <div v-if="valor.tipo == 'Ejecutor'">
         <li class="bg-stone-800 pb-4 rounded-md">
-          <h1 class="bg-stone-600">{{ valor.nombre }}</h1>
+          <h1 class="bg-stone-600">
+            {{ valor.nombre }}
+            <button
+              @click="mostrarInput()"
+              class="bg-stone-700 p-1 mt-1 mb-1 rounded-md hover:bg-stone-800"
+            >
+              Editar
+            </button>
+            <input
+              v-model="nuevoNombre"
+              @keyup.enter="actualizaNombre()"
+              v-if="mostrarInputNombre"
+              type="text"
+              class="ml-3 text-black"
+            />
+          </h1>
+
           <div class="grid grid-cols-2">
             <h1 class="mt-4">Estado: {{ valor.estado }}</h1>
             <h1 class="mt-3">Sala: {{ valor.sala }}</h1>
