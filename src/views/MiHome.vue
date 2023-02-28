@@ -58,7 +58,28 @@
 
           <div class="grid grid-cols-2">
             <h1 class="mt-4">Estado: {{ valor.estado }}</h1>
-            <h1 class="mt-3">Sala: {{ valor.sala }}</h1>
+            <h1 class="mt-3">
+              Sala: {{ valor.sala }}
+              <button
+                @click="cambioSala()"
+                class="bg-stone-700 p-1 mt-1 mb-1 rounded-md hover:bg-stone-500"
+              >
+                Editar
+              </button>
+              <div v-if="mostrarCambioSala">
+                <select v-model="cambio" class="bg-stone-700">
+                  <option v-for="(sala, index) in salas" :key="index" :value="sala.espacio">
+                    {{ sala.espacio }}
+                  </option>
+                </select>
+                <button
+                  @click="actualizaSala()"
+                  class="bg-stone-700 p-1 ml-2 mt-1 mb-1 rounded-md hover:bg-stone-500"
+                >
+                  Confirmar
+                </button>
+              </div>
+            </h1>
           </div>
         </li>
       </div>
@@ -69,16 +90,20 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { onDameDispositivos, actualizaDisp } from '../API/firebase'
+import { onDameDispositivos, actualizaDisp, onDameSalas } from '../API/firebase'
 
 let dispositivoActual = ref([])
 const router = useRoute()
 const valorTemperatura = ref('')
 const nuevoNombre = ref('')
 let mostrarInputNombre = ref(false)
+let mostrarCambioSala = ref(false)
+let salas = ref([])
+const cambio = ref('')
 
 onMounted(() => {
   consultaFiltrada(router.params.id)
+  dameSalas()
 })
 
 const consultaFiltrada = (id) => {
@@ -105,7 +130,24 @@ function actualizaNombre() {
 
 function mostrarInput() {
   mostrarInputNombre.value = !mostrarInputNombre.value
-  console.log(mostrarInputNombre.value)
+}
+
+function cambioSala() {
+  mostrarCambioSala.value = !mostrarCambioSala.value
+}
+
+const dameSalas = () => {
+  onDameSalas('SALAS', (docs) => {
+    salas.value = []
+    docs.forEach((doc) => {
+      salas.value.push({ id: doc.id, ...doc.data() })
+    })
+  })
+}
+
+function actualizaSala() {
+  actualizaDisp('DISPOSITIVOS', router.params.id, { sala: cambio.value })
+  cambio.value = ''
 }
 </script>
 
